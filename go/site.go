@@ -15,7 +15,7 @@ func main() {
 	fmt.Println("Server started on port 8001")
 
 	tmpl := template.Must(template.ParseFiles("./static/html/main_template.html"))
-	http.Handle("/static", http.FileServer(http.Dir("/static")))
+	http.Handle("/static", http.FileServer(http.Dir("./static")))
 	http.HandleFunc("/static/", serveFiles)
 	r.HandleFunc("/{page}", func(w http.ResponseWriter, r *http.Request){
 		vars := mux.Vars(r)
