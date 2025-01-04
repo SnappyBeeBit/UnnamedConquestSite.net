@@ -12,8 +12,6 @@ func main() {
 
 	tmpl := template.Must(template.ParseFiles("./static/main_template.html"))
 
-
-
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request){
 		page := r.URL.Path[1:]
 
