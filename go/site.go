@@ -5,8 +5,7 @@ import (
 	"fmt"
 	"html/template"
 	"os"
-	"path/filepath"
-	"errors"
+	"strings"
 )
 func main() {
 	fmt.Println("Server started on port 8001")
@@ -22,18 +21,14 @@ func main() {
 		if page == "" {
 			page = "index"
 		}
-
+		if strings.HasSuffix(page, "/") {
+			page += "index"
+		}
 		path := "./static/"
 		fullpath := path + page + ".html"
-
-		result_path, err := verifyPath(fullpath)
-
-		if err != nil {
-			http.Redirect(w,r,"/", http.StatusBadRequest)
-		}
-
 		fmt.Println(fullpath)
-		content, err := os.ReadFile(result_path)
+
+		content, err := os.ReadFile(fullpath)
 		if err != nil {
 			fmt.Print(err)
 		}
@@ -43,17 +38,4 @@ func main() {
 	} )
 	http.ListenAndServe(":8001", nil)
 }
-func verifyPath(path string) (string, error) {
-	c := filepath.Clean(path)
-	fmt.Println("Cleaned path: " + c)
 
-	r, err := filepath.EvalSymlinks(c)
-	if err != nil {
-		fmt.Println("Error " + err.Error())
-		return c, errors.New("Unsafe or invalid path specified")
-	} else {
-		fmt.Println("Canonical: " + r)
-		return r, nil
-	}
-
-}
